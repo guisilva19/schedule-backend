@@ -1,10 +1,18 @@
 import { DataSource } from "typeorm";
 import 'dotenv/config'
 
-const AppDataSource = new DataSource({
+
+
+export const AppDataSource = new DataSource({
     type: 'postgres',
     host: 'localhost',
-    port: process.env.PORT,
+    port: 5432,
+    username: 'postgres',
+    password: 'postgres',
+    database: 'fullstack',
     entities: ['src/entities/*.ts'],
     migrations: ['src/migrations/*.ts'],
+    synchronize: false,
+    logging: false
 })
+
