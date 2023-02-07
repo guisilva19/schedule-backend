@@ -7,12 +7,15 @@ import { IContact } from "../../interfaces"
 const contactCreateService = async (validated: IContact, id: any) => {
 
     const contactRepository = AppDataSource.getRepository(Contact)
-    
 
-    const contacts = await contactRepository.find()
+    const contacts = await contactRepository.find({
+        where: {
+            user_id: { id }
+        }
+    })
 
     const contactExists = contacts.find(contact => contact.email === validated.email || contact.telephone === validated.telephone)
-    if(contactExists) {
+    if (contactExists) {
         throw new AppError('Contact alrealdy exists', 400)
     }
 
@@ -22,7 +25,7 @@ const contactCreateService = async (validated: IContact, id: any) => {
     }
     const contact = contactRepository.create(body)
     await contactRepository.save(contact)
-    
+
     return contact
 }
 
