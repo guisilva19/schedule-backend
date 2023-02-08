@@ -9,8 +9,19 @@ const contactUpdatedService = async (id: any, body: IContact) => {
     const allContacts = await contactRepository.find()
     const contactExist = allContacts.find(contact => contact.id == id)
 
+    
     if(!contactExist) {
         throw new AppError('Contact not exist', 400)
+    }
+    const contacts = await contactRepository.find({
+        where: {
+            user_id: { id }
+        }
+    })
+
+    const contactExists = contacts.find(contact => contact.email === body.email || contact.telephone === body.telephone)
+    if (contactExists) {
+        throw new AppError('Contact alrealdy exists', 400)
     }
 
     await contactRepository.update(id, {
